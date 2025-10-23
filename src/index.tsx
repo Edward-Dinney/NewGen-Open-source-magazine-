@@ -2,8 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import ImageDetail from './ImageDetail';
 import Login from './Login'
 import Signup from './Signup'
+import Upload from './Upload'
 import MyUploads from './MyUploads'
 import UserUploads from "./UserUploads";
 import reportWebVitals from './reportWebVitals';
@@ -19,8 +21,10 @@ root.render(
       <AuthProvider>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/image/:id" element={<ImageDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/upload" element={<Upload />} />
         <Route path="/myuploads" element={<MyUploads />} />
         <Route path="/uploads/:uid" element={<UserUploads />} />
         <Route path="*" element={<Navigate to="/" />} />

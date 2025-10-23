@@ -1,3 +1,4 @@
+import './App.css';
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
@@ -10,6 +11,8 @@ import {
   deleteObject,
   type StorageReference,
 } from "firebase/storage";
+import girl from "./assets/girl.gif";
+import backbutton from "./assets/backbutton.png"
 
 type ImgItem = {
   id: string;            // stable id (storagePath or meta.generation)
@@ -85,27 +88,31 @@ export default function UserUploads() {
   };
 
   if (!routeUid) return <p>Invalid user.</p>;
-  if (loading) return <p>Loading…</p>;
-
+ 
   return (
     <div>
-      <h1>User uploads</h1>
-      <button onClick={() => navigate("/")}>Home</button>
+      <div className="Header">
+      <img src={backbutton} className="back-button" onClick={() => navigate(-1)}/>
+      </div>
+      {loading ? (<div className="Loading">
+      <img src={girl} alt="Loading…" />
+      </div>) : (<>
       {items.length === 0 && <p>No uploads yet.</p>}
+
+      <div className='Body'>
       {items.map((item) => (
-        <figure key={item.id}>
+        <figure key={item.id} onClick={() => navigate(`/image/${encodeURIComponent(item.storagePath)}`)} className="gallery-item">
           <img
             src={item.url}
             alt={item.description || "Uploaded image"}
           />
-          <figcaption>{item.description || <em>(No description)</em>}</figcaption>
-
-          {/* show delete ONLY if viewing your own uid */}
-          {user && user.uid === item.uid && (
+          {/*{user && user.uid === item.uid && (
             <button onClick={() => deleteImage(item)}>Delete</button>
-          )}
+          )}*/}
         </figure>
       ))}
+      </div>
+      </>)}
     </div>
   );
 }

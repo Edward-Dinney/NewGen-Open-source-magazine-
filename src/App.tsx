@@ -1,11 +1,20 @@
 import './App.css';
 import { useState, useEffect, useMemo } from 'react';
 import { storage } from './firebase';
-import { ref, uploadBytes, listAll, getDownloadURL, getMetadata, type StorageReference } from 'firebase/storage';
-import { ref as storageRef, deleteObject } from "firebase/storage";
+import { ref, uploadBytes, listAll, getDownloadURL, getMetadata, deleteObject, type StorageReference } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "./AuthContext"
+import { useAuth } from "./AuthContext";
+import home from "./assets/home.png";
+import loginbutton from "./assets/login.png";
+import loginbuttonhover from "./assets/login-hover.png"
+import logoutbutton from "./assets/logout.png"
+import logoutbuttonhover from "./assets/logout-hover.png"
+import uploadbutton from "./assets/upload.png";
+import uploadbuttonhover from "./assets/upload-hover.png";
+import userupload from "./assets/userupload.png"
+import useruploadhover from "./assets/userupload-hover.png"
+import girl from "./assets/girl.gif";
 
 function App() {
   type ImgItem = {id: string; url: string; description: string; storagePath: string; uid: string };
@@ -13,11 +22,9 @@ function App() {
   const [imageList, setImageList] = useState<ImgItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [description, setDescription] = useState<string>("");
-
+  const [Hover, setHover] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
-  // Memoize the reference so it doesn't change on each render
   const imageListRef = useMemo(() => ref(storage, 'Tags/'), []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,53 +116,42 @@ function App() {
 
   return (
     <div className="App">
+      <div className="Header">
+      <img src={home} alt="Home" className="home-button" onClick={() => window.location.reload()}/>
+
+      <div className='Menu-container'>
       {user ? (
         <>
-        <button onClick={handleLogout}>Log out</button>
-        <button onClick={() => navigate("/myuploads")}>My uploads</button>
+        <button onClick={() => navigate("/myuploads")} className='UserUpload' onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+          <img src={userupload} alt='User uploads' className='user-upload-button'/>
+        </button>
+        <button onClick={() => navigate("/upload")} className='Upload' onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+        <img src={uploadbutton} className='upload-button'/>
+        </button>
+        <button onClick={handleLogout} className='Logout' onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+          <img src={logoutbutton} alt='Logout button' className='logout-button'/>
+        </button>
         </>
-      ) : (<button onClick={() => navigate("/login")}>Log in</button>)}
-    
-      <div>
-        <label htmlFor="file-input">Upload an image</label>
-        <input
-          id="file-input"
-          type="file"
-          accept="image/*"
-          onChange={handleChange}
-        />
+      ) : (<button onClick={() => navigate("/login")} className='Login' onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+        <img src={loginbutton} className='login-button'/>
+      </button>)}
+      </div>
       </div>
 
-      <div>
-        <label htmlFor="desc-input">Description</label>
-        <input
-          id="desc-input"
-          type="text"
-          placeholder="Write description here"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+      <div className='Body'>
+      {loading && (
+      <div className="Loading">
+      <img src={girl} alt="Loading…" />
       </div>
-
-      <button onClick={uploadTag} disabled={!imageUpload || !user}>
-        {imageUpload ? 'Upload Image' : 'Choose a file first'}
-      </button>
-
-      {loading && <p role="status" aria-live="polite">Loading…</p>}
+      )}
       {!loading && imageList.length === 0 && <p>No images yet.</p>}
 
       {imageList.map((item) => (
-        <figure key={item.id}>
-        <img src={item.url} alt={item.description || "Uploaded image"} />
-        <figcaption>{item.description}</figcaption>
-        {user && user.uid === item.uid && (
-        <button onClick={() => deleteImage(item)}>Delete</button>
-        )}
-        <button onClick={() => navigate(`/uploads/${item.uid}`)}>
-         More from this user
-        </button>
+      <figure key={item.id} onClick={() => navigate(`/image/${encodeURIComponent(item.storagePath)}`)} className="gallery-item">
+      <img src={item.url} alt={item.description || "Uploaded image"} />
       </figure>
 ))}
+      </div>
     </div>
   );
 }

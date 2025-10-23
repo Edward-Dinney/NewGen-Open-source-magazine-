@@ -1,38 +1,380 @@
+html, body { height: 100%; }
+body { margin: 0; background: #ff0000; }
+img { max-width: 100%; height: auto; display: block; }
 .App {
+  margin: 0 auto;
+  min-height: 100dvh;
+  position: relative;
+}
+
+.Loading{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.Header {
+  position: sticky;            /* stays at top while scrolling */
+  top: 0;
+  z-index: 1000;
+  height: 60px;
+  padding: 0 20px;
+  background: #ff0000;         /* same red as body to blend */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Menu-container{
+  position: fixed;   /* stays in place when scrolling */
+  top: 0px;         /* distance from the top edge */
+  right: 5px;       /* distance from the right edge */
+  display: flex;     /* if you have multiple items */
+  gap: 10px;         /* space between buttons */
+  z-index: 1000;
+}
+
+.home-button{
+  position: fixed;
+  top: 0px;
+  left: 5px;
+  cursor: pointer;
+  width: 210px;               
+  height: auto;
+}
+
+.myuploads{
+  position: fixed;
+  width: 200px;
+  height: auto;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, 55%);
+}
+
+.UserUpload, .Upload, .Logout, .Login{
+  background: none;          /* remove red background */
+  border: none;              /* remove outline */
+  padding: 5px;
+  
+}
+
+.back-button{
+  width: 45px; 
+  top: 0px;
+  left: 5px;             
+  height: auto;
+  background: none;          /* ensure transparent */
+  display: flex;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 1000;
+  transform: translate(-35%, -2%);
+}
+
+.user-upload-button, .upload-button, .logout-button, .login-button{
+  width: 45px;               /* adjust as needed */
+  height: auto;
+  background: none;          /* ensure transparent */
+  display: block;
+  cursor: pointer;
+}
+
+.UserUpload:hover, .Upload:hover, .Logout:hover, .Login:hover, .back-button:hover{
+  transform: scale(1.1);   
+  transition: transform 0.2s ease;
+}
+
+.Body {
+  column-count: 4;          /* 3 uneven vertical columns */
+  column-gap: 5px; 
+  padding: 12px;           /* no gaps between them */
+}
+
+figure {
+  display: inline-block;
+  width: 100%;
+  margin: 0;
+  padding: 0;     /* prevent weird breaks */
+}
+
+figure:hover {
+  transform: scale(1.05);
+  transition: transform 0.4s ease; 
+}
+
+figure > img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.home-splash {
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: pointer;
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.Login-input{
+  display: grid;
+  justify-content: center;
+  padding: 1px;
+}
+
+.Email-input, .Password-input, .Re-Password-input{
+  width: clamp(260px, 28vw, 360px);
+  padding: 1px;
+}
+
+.Login-block{
+  display: flex;
+  justify-content: center;   /* centers horizontally */
+  align-items: center;                 /* space between buttons */
+  margin-top: 1px;
+  width: 100%; 
+}
+
+.email-button,
+.signup-button {
+  display: block;
+  cursor: pointer;
+  width: 70px;     /* increase or decrease */
+  height: auto;
+}
+
+.email-button:hover, .signup-button:hover{
+  transform: scale(1.03);
+  translate: transfrom 0.4 ease;
+}
+
+.gsi-material-button {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: none;
+  background-color: WHITE;
+  background-image: none;
+  border: 1px solid #747775;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #1f1f1f;
+  cursor: pointer;
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 14px;
+  height: 40px;
+  letter-spacing: 0.25px;
+  outline: none;
+  overflow: hidden;
+  padding: 0 12px;
+  position: relative;
   text-align: center;
+  -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
+  transition: background-color .218s, border-color .218s, box-shadow .218s;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  max-width: 400px;
+  min-width: min-content;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.gsi-material-button .gsi-material-button-icon {
+  height: 20px;
+  margin-right: 12px;
+  min-width: 20px;
+  width: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.gsi-material-button .gsi-material-button-content-wrapper {
+  -webkit-align-items: center;
+  align-items: center;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  height: 100%;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.gsi-material-button .gsi-material-button-contents {
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+
+.gsi-material-button .gsi-material-button-state {
+  -webkit-transition: opacity .218s;
+  transition: opacity .218s;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.gsi-material-button:disabled {
+  cursor: default;
+  background-color: #ffffff61;
+  border-color: #1f1f1f1f;
+}
+
+.gsi-material-button:disabled .gsi-material-button-contents {
+  opacity: 38%;
+}
+
+.gsi-material-button:disabled .gsi-material-button-icon {
+  opacity: 38%;
+}
+
+.gsi-material-button:not(:disabled):active .gsi-material-button-state, 
+.gsi-material-button:not(:disabled):focus .gsi-material-button-state {
+  background-color: #303030;
+  opacity: 12%;
+}
+
+.gsi-material-button:not(:disabled):hover {
+  -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+}
+
+.gsi-material-button:not(:disabled):hover .gsi-material-button-state {
+  background-color: #303030;
+  opacity: 8%;
+}
+
+#file-input {
+  display: none;
+}
+
+.UploadWrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  height: 80vh;
+  gap: 15px;
+}
+
+.SideBySide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;            
+}
+
+.plus-icon {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.preview-image {
+  width: 450px;
+  height: 450px;
+  border-radius: 16px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.textbox {
+  width: 450px;
+  height: 450px;
+  border-radius: 16px;
+  padding: 5px;
+  font-size: 18px;
+  resize: none;
+  overflow-y: auto;     /* scroll if text exceeds box */
+  white-space: pre-wrap;
+  box-sizing: border-box;
+}
+
+.preview-image:hover,
+.plus-icon:hover {
+  transform: scale(1.05);
+}
+
+.Publish:hover{
+  transform: scale(1.05);
+}
+
+.Detail-set{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px; 
+  margin-top: 30px;
+}
+
+.Image-Detail-Box {
+  max-width: 40%;
+  max-height: auto;        /* so image takes left half */
+  display: flex;
+  justify-content: center;
+}
+
+.detail-caption{
+  width: 600px;
+  height: 600px;
+  padding: 5px;
+  font-size: 18px;
+  color: rgb(0, 0, 0);
+  resize: none;
+  overflow-y: auto;
+  border: 2px solid black;
+}
+
+.Button-set{
+  display: flex;
+  justify-content: center;   /* centers horizontally */
+  align-items: center;
+  gap: 5px;                  /* space between Writer + Delete buttons */
+  margin-top: 20px;
+}
+
+.Writer {
+  padding: 6px 10px;
+  background: black;
   color: white;
+  border-radius: 8px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-.App-link {
-  color: #61dafb;
+.Writer:hover {
+  transform: scale(1.05);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Delete-button{
+  padding: 6px 10px;
+  background: black;
+  color: white;
+  border-radius: 8px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.Delete-button:hover{
+  transform: scale(1.05);
 }

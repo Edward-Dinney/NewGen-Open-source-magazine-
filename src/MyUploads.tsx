@@ -1,4 +1,4 @@
-// src/MyUploads.tsx
+import "./App.css";
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "./AuthContext";
 import { storage } from "./firebase";
@@ -11,6 +11,10 @@ import {
   deleteObject,
   type StorageReference,
 } from "firebase/storage";
+import home from "./assets/home.png";
+import girl from "./assets/girl.gif";
+import myuploads from "./assets/myuploads.png";
+import backbutton from "./assets/backbutton.png"
 
 type ImgItem = {
   id: string;            // stable id (storagePath or meta.generation)
@@ -20,11 +24,10 @@ type ImgItem = {
   uid: string;           // uploader uid
 };
 
-
 export default function MyUploads() {
   const { user } = useAuth();
   const [items, setItems] = useState<ImgItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Folder for THIS user’s uploads
@@ -81,8 +84,11 @@ export default function MyUploads() {
 
   const deleteImage = async (item: ImgItem) => {
     try {
+      setLoading(true)
       await deleteObject(ref(storage, item.storagePath));
       setItems((prev) => prev.filter((i) => i.id !== item.id));
+      navigate("/");
+      setLoading(false)
     } catch (e) {
       console.error("Delete failed", e);
       alert("Failed to delete image.");
@@ -90,24 +96,32 @@ export default function MyUploads() {
   };
 
   if (!user) return <p>Please log in to see your uploads.</p>;
-  if (loading) return <p>Loading…</p>;
-
+  if (loading) {
+    return (
+      <div className="Loading">
+        <img src={girl} alt="Loading…" />
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h1>My uploads</h1>
-      <button onClick={() => navigate("/")}>Home</button>
+    <div className="App">
+      <div className="Header">
+      <img src={myuploads} className="myuploads"/>
+      <img src={backbutton} className="back-button" onClick={() => navigate(-1)}/>
+      </div>
+      <div className='Body'>
       {items.map((item) => (
-        <figure key={item.id}>
+        <figure key={item.id} onClick={() => navigate(`/image/${encodeURIComponent(item.storagePath)}`)}>
           <img
             src={item.url}
             alt={item.description || "Uploaded image"}
           />
-          <figcaption>{item.description || <em>(No description)</em>}</figcaption>
-          {/* Only the owner can see this page, but keep the button anyway */}
-          <button onClick={() => deleteImage(item)}>Delete</button>
+          
+          {/* <button onClick={() => deleteImage(item)}>Delete</button> */}
         </figure>
       ))}
+      </div>
     </div>
   );
 }
