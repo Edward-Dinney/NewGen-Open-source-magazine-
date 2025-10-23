@@ -25,7 +25,6 @@ const signInWithGoogle = async () => {
   try {
     // Call popup directly in the click handler; avoid doing other async work first.
     const res = await signInWithPopup(getAuth(), provider);
-    console.log(res.user.uid);
     navigate('/');
   } catch (err: any) {
     console.warn('Popup sign-in failed:', err?.code);
@@ -54,7 +53,6 @@ const signInWithGoogle = async () => {
 
         signInWithEmailAndPassword(auth, email, password)
             .then(response => {
-                console.log(response.user.uid);
                 navigate('/');
             })
             .catch(error => {
