@@ -1,6 +1,6 @@
 import './App.css'
 import { useState } from "react";
-import {getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth';
+import {getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signInWithRedirect } from 'firebase/auth';
 import { useNavigate } from "react-router-dom";
 import home from "./assets/home.png"
 import backbutton from "./assets/backbutton.png"
@@ -19,19 +19,34 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const[error, setError] = useState('');
 
-    const signInWithGoogle = async () => {
-        setAuthing(true);
+    const provider = new GoogleAuthProvider();
 
-        signInWithPopup(auth, new GoogleAuthProvider())
-            .then(response => {
-                console.log(response.user.uid);
-                navigate('/');
-            })
-            .catch(error => {
-                console.log(error);
-                setAuthing(false);
-            })
+const signInWithGoogle = async () => {
+  try {
+    // Call popup directly in the click handler; avoid doing other async work first.
+    const res = await signInWithPopup(getAuth(), provider);
+    console.log(res.user.uid);
+    navigate('/');
+  } catch (err: any) {
+    console.warn('Popup sign-in failed:', err?.code);
+
+    // Common popup errors that should fallback to redirect
+    const popupBlocked =
+      err?.code === 'auth/popup-blocked' ||
+      err?.code === 'auth/popup-closed-by-user' ||
+      err?.code === 'auth/cancelled-popup-request';
+
+    if (popupBlocked) {
+      // Redirect flow is more reliable on Safari/iOS and locked-down browsers.
+      await signInWithRedirect(getAuth(), provider);
+      return;
     }
+
+    // Surface unexpected errors
+    setAuthing(false);
+    setError(err?.message ?? 'Sign-in failed.');
+  }
+};
 
     const signInWithEmail = async () => {
         setAuthing(true);
